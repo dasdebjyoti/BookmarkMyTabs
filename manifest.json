@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "BookmarkMyTabs",
+    "version": "1.0",
+    "description": "A Chrome extension to bookmark all open tabs",
+    "author": "Debjyoti Das",
+    "permissions": [
+        "tabs",
+        "bookmarks"
+    ],
+    "background": {
+        "service_worker": "service_worker.js",
+        "type": "module"
+    },
+    "action": {
+        "default_icon": "icon.png"
+    }
+}
