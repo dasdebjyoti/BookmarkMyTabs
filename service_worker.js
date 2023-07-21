@@ -1,12 +1,24 @@
-console.log("Background Service-Worker Start");
+// File: Service-Worker.js
+// File Version: 1.0
+// Project: BookmarkMyTabs Chrome Extension
+
+console.log("BookmarkMyTabs Service-Worker Start");
 
 const sOurBookmarkFolder = "BookmarkMyTabs";
 const cParentIdBmkBar = '1';    // 1 = Bookmarks bar. 2 = Other bookmarks
 const cParentIdBmkOther = '2';  // 1 = Bookmarks bar. 2 = Other bookmarks
 const cOurParentId = cParentIdBmkBar;
 
-chrome.action.onClicked.addListener((tab) => {
+chrome.windows.onRemoved.addListener(function(windowId) {
+  console.log("!! Exiting the Browser !!");
+});
 
+chrome.action.onClicked.addListener((tab) => {
+  startBookmarking();
+});
+
+function startBookmarking()
+{
   // Search for our bookmark folder
   chrome.bookmarks.search( {
     title: sOurBookmarkFolder
@@ -48,25 +60,25 @@ chrome.action.onClicked.addListener((tab) => {
       addFolderAndBmkTabs();
     };
   });
-});
+}
 
 // Bookmark open tabs under the given node
 // Param node: A BookmarkTreeNode object
 function bookmarkOpenTabs(node)
 {
+  console.log("+bookmarkOpenTabs()");
   chrome.bookmarks.getChildren(
     node.id.toString(),
     function(bmkList)
     {
-      
       chrome.tabs.query({}, function(tabs) {
         let bFound = false;
         tabs.forEach(function(tab) {
-
+          console.log("HERE");
           // Check if the bookmark already exists
           if (0 < bmkList.length)
           {
-            console.log('Existing bookmarks: ' + bmkList.length);
+            console.log(' bookmarkOpenTabs() -> Existing bookmarks: ' + bmkList.length);
             bFound = false;
             for (const bmk of bmkList)
             {
@@ -85,12 +97,14 @@ function bookmarkOpenTabs(node)
               url: tab.url
             },
             () => {
-              console.log('Bookmark added: ' + tab.title);
+              console.log(' bookmarkOpenTabs() -> Bookmark added: ' + tab.title);
             });
           }
         });
       });
     });
+  
+  console.log("-bookmarkOpenTabs()");
 }
 
 // Add our bookmark folder and bookmark open tabs
@@ -106,4 +120,4 @@ function addFolderAndBmkTabs()
   });
 }
 
-console.log("Background Service-Worker End");
+console.log("BookmarkMyTabs Service-Worker End");
