@@ -74,7 +74,6 @@ function bookmarkOpenTabs(node)
       chrome.tabs.query({}, function(tabs) {
         let bFound = false;
         tabs.forEach(function(tab) {
-          console.log("HERE");
           // Check if the bookmark already exists
           if (0 < bmkList.length)
           {
